@@ -41,9 +41,9 @@ export class Camera {
         this.canvas.height = this.screenHeight;
         this.canvaCtx.clearRect(0, 0, this.screenWidth, this.screenHeight);
     }
-    draw(entities, targetCenterX, targetCenterY) {
-        this.x += (targetCenterX - this.x) * this.cameraSpeed;
-        this.y += (targetCenterY - this.y) * this.cameraSpeed;
+    draw(entities, targetCenterX, targetCenterY, dt) {
+        this.x += (targetCenterX - this.x) * this.cameraSpeed * dt;
+        this.y += (targetCenterY - this.y) * this.cameraSpeed * dt;
         entities.forEach(e => {
             if (!e) {
                 return;

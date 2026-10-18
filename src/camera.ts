@@ -55,9 +55,9 @@ export class Camera{
 
     }
     
-    draw(entities : entity[], targetCenterX : number, targetCenterY : number): void{
-        this.x += (targetCenterX - this.x) * this.cameraSpeed;
-        this.y += (targetCenterY - this.y) * this.cameraSpeed;
+    draw(entities : entity[], targetCenterX : number, targetCenterY : number, dt : number): void{
+        this.x += (targetCenterX - this.x) * this.cameraSpeed * dt;
+        this.y += (targetCenterY - this.y) * this.cameraSpeed * dt;
         entities.forEach(e => {
             if(!e){return;}
             const x = e.x - this.x + this.screenWidth / 2;

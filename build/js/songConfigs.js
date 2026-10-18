@@ -3,7 +3,7 @@ export const songConfigs = [
         name: "Dreiton",
         file: "dreiton",
         startTime: 150,
-        tracks: [6, 1]
+        tracks: [0, 6]
     },
     {
         name: "Claire de Lune",
@@ -13,7 +13,7 @@ export const songConfigs = [
     {
         name: "Merry Go Round of Life",
         file: "merry",
-        startTime: 0,
+        startTime: 50,
     },
     {
         name: "Sweden",
@@ -37,5 +37,15 @@ export const songConfigs = [
         file: "nocturne",
         startTime: 0,
         tracks: [1]
+    },
+    {
+        name: "Mice On Venus",
+        file: "mice-on-venus",
+        startTime: 0
+    },
+    {
+        name: "Dry hands",
+        file: "dry-hands",
+        startTime: 0
     }
 ];

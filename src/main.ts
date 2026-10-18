@@ -3,7 +3,7 @@ import { Camera } from "./camera.js";
 import { songConfigs } from "./songConfigs.js";
 import { entity } from "./entity.js";
 import { createPlatforms, Platform } from "./platform.js";
-import { detectMidiNotes, playMp3File } from "./soundExtractor.helper.js"
+import { detectMidiNotes, playMp3File } from "./sound.helper.js"
 import { handleCollision, Particle, spawnParticlePatch, updateParticles } from "./particle.js";
 
 
@@ -28,18 +28,18 @@ function loop(ball : Ball, particles : Particle[][], platforms : Platform[], cam
 
     const trueTime = (time - beginTime) / 1000;
     if(trueTime >= notesTime[0]){
-        ball.move(gravity, dt);
+        ball.move(trueTime, gravity);
         updateParticles(particles, dt)
     
         const entities : entity[] = [...platforms, ...particles.flat(),ball];
     
         camera.refreshScreen();
-        camera.draw(entities, ball.x, ball.y);
+        camera.draw(entities, ball.x, ball.y, dt);
     
         const currentNoteTime = notesTime[currentNote];
         if(trueTime > currentNoteTime){
             const platform = platforms[currentNote]
-            ball.bounce(platform.ballTargetY, platform.ballVelY);
+            ball.bounce(platform.ballTargetY, platform.ballVelY, trueTime, ball.x);
             let collideY = ball.y - ball.sizeY;
             if(platform.reversedBounce){
                 collideY = ball.y + ball.sizeY;
@@ -63,7 +63,7 @@ function main(){
     
     const ball = new Ball(200, 0, 0.9, 10, "#00ffcc");
     const particles : Particle[][] = [];
-    const camera = new Camera(0, 0, 1, canvas, ctx, 0.05);
+    const camera = new Camera(0, 0, 1, canvas, ctx, 5);
 
 
     const songSelector = document.getElementById('songSelector') as HTMLInputElement;
@@ -91,9 +91,11 @@ function main(){
             return;
         }
 
-        const skipTime = notesTime[0] + (song.startTime ?? 0);
+        let skipTime = notesTime[0] + (song.startTime ?? 0);
         notesTime = notesTime.map((v) => {return v - skipTime}).filter((v) => {return v >= 0});
-
+        skipTime += notesTime[0];
+        notesTime = notesTime.map((v) => v - notesTime[0]);
+        
         ball.resetPos();
         camera.resetPos();
         const platforms : Platform[] = createPlatforms(notesTime, gravity, ball);

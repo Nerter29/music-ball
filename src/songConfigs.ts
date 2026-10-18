@@ -11,7 +11,7 @@ export const songConfigs : songConfig[] = [
         name: "Dreiton",
         file: "dreiton",
         startTime: 150,
-        tracks: [6, 1]
+        tracks: [0, 6]
     },
     {
         name: "Claire de Lune",
@@ -21,7 +21,7 @@ export const songConfigs : songConfig[] = [
     {
         name: "Merry Go Round of Life",
         file : "merry",
-        startTime: 0,
+        startTime: 50,
     },
     {
         name: "Sweden",
@@ -40,10 +40,20 @@ export const songConfigs : songConfig[] = [
         startTime: 50,
         tracks: [13, 14]
     },
-        {
+    {
         name: "Nocturne",
         file : "nocturne",
         startTime: 0,
         tracks: [1]
+    },
+    {
+        name: "Mice On Venus",
+        file : "mice-on-venus",
+        startTime: 0
+    },
+    {
+        name: "Dry hands",
+        file : "dry-hands",
+        startTime: 0
     }
 ]

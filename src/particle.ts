@@ -64,7 +64,7 @@ export class Particle extends entity{
             this.x += this.vx * dt;
             this.y += this.vy * dt;
 
-            this.vy -= this.gravity;
+            this.vy -= this.gravity * dt;
 
             this.life -= dt;
         }
@@ -134,5 +134,5 @@ export function handleCollision(
 
     const angle = Math.atan2(vy, vx);
 
-    spawnParticlePatch(particles, x, y, angle, num, color, angleDiff, speed, speedDiff, gravity * 0.003);
+    spawnParticlePatch(particles, x, y, angle, num, color, angleDiff, speed, speedDiff, gravity * 0.5);
 }

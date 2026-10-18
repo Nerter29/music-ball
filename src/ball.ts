@@ -9,6 +9,11 @@ export default class Ball extends entity{
     baseX : number;
     baseY : number;
 
+    startX: number = 0;
+    startY: number = 0;
+    startGravity: number = 0;
+    lastBounceTime: number = 0;
+
     constructor(velX : number, velY : number, bounceRatio: number, radius : number, color: string){
         super(0, 0, radius, radius, color);
         this.baseVelX = velX;
@@ -27,18 +32,19 @@ export default class Ball extends entity{
         this.velY = this.baseVelY;
     }
 
-    move(gravity : number, dt : number) : void{    
-    
-        this.x += this.velX * dt;
-        this.y += this.velY * dt;
+    /** Analytic move */
+    move(time: number, gravity: number) {
+        const t = time - this.lastBounceTime;
 
-        this.velY -= gravity * dt;
+        this.x = this.startX + this.velX * t;
+        this.y = this.startY + (this.velY * t) - (0.5 * gravity * t * t);
     }
 
-    bounce(ballTargetY : number, newVelY: number) : void{
-        
+    bounce(ballTargetY: number, newVelY: number, time: number, currentX: number) {
+        this.lastBounceTime = time;
+        this.startX = currentX;
+        this.startY = ballTargetY;
         this.velY = newVelY;
-        this.y = ballTargetY;
     }
 
     
