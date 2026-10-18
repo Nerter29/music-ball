@@ -1,0 +1,6 @@
+ajouter une trainée
+paricules
+faire des configs pour chaque sons pour que ca soit rapide a lancer
+camera mouvements
+trouver d'autres midi
+corriger les petits mouvements chiants entre 2 plateformes mieux calculer vely

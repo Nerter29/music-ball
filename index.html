@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+    <head>
+      <link href="styles.css" rel="stylesheet">
+      <title>Music Ball</title>
+      <script type="importmap">
+        {
+          "imports": {
+            "@tonejs/midi": "https://cdn.jsdelivr.net/npm/@tonejs/midi@2.0.28/+esm"
+          }
+        }
+      </script>
+    </head>
+    <body>
+        <select id="songSelector"></select>
+        <canvas id="mainCanvas"></canvas>
+
+        <script type="module" src="build/js/main.js"></script>
+    </body>
+
+</html>
