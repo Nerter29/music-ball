@@ -2,7 +2,7 @@ import Ball from "./ball.js";
 import { Camera } from "./camera.js";
 import { songConfigs } from "./songConfigs.js";
 import { createPlatforms } from "./platform.js";
-import { detectMidiNotes, playMp3File } from "./sound.helper.js";
+import { detectMidiNotes, playMp3File, stopAudio } from "./sound.helper.js";
 import { handleCollision, updateParticles } from "./particle.js";
 const gravity = 750;
 let lastTime = 0;
@@ -18,23 +18,21 @@ function loop(ball, particles, platforms, camera, notesTime, currentNote, time) 
     const dt = (time - lastTime) / 1000;
     lastTime = time;
     const trueTime = (time - beginTime) / 1000;
-    if (trueTime >= notesTime[0]) {
-        ball.move(trueTime, gravity);
-        updateParticles(particles, dt);
-        const entities = [...platforms, ...particles.flat(), ball];
-        camera.refreshScreen();
-        camera.draw(entities, ball.x, ball.y, dt);
-        const currentNoteTime = notesTime[currentNote];
-        if (trueTime > currentNoteTime) {
-            const platform = platforms[currentNote];
-            ball.bounce(platform.ballTargetY, platform.ballVelY, trueTime, ball.x);
-            let collideY = ball.y - ball.sizeY;
-            if (platform.reversedBounce) {
-                collideY = ball.y + ball.sizeY;
-            }
-            handleCollision(particles, ball.x, collideY, ball.velX, ball.velY, "#00b3ff", gravity);
-            currentNote++;
+    ball.move(trueTime, gravity);
+    updateParticles(particles, dt);
+    const entities = [...platforms, ...particles.flat(), ball];
+    camera.refreshScreen();
+    camera.draw(entities, ball.x, ball.y, dt);
+    const currentNoteTime = notesTime[currentNote];
+    if (trueTime > currentNoteTime) {
+        const platform = platforms[currentNote];
+        ball.bounce(platform.ballTargetY, platform.ballVelY, trueTime);
+        let collideY = ball.y - ball.sizeY;
+        if (platform.reversedBounce) {
+            collideY = ball.y + ball.sizeY;
         }
+        handleCollision(particles, ball.x, collideY, ball.velX, ball.bounceVelY, "#00b3ff", gravity);
+        currentNote++;
     }
     if (playing) {
         requestAnimationFrame((currentTime) => loop(ball, particles, platforms, camera, notesTime, currentNote, currentTime));
@@ -70,23 +68,29 @@ function main() {
         if (notesTime.length <= 0) {
             return;
         }
+        const preSongTime = 2;
         let skipTime = notesTime[0] + (song.startTime ?? 0);
         notesTime = notesTime.map((v) => { return v - skipTime; }).filter((v) => { return v >= 0; });
         skipTime += notesTime[0];
-        notesTime = notesTime.map((v) => v - notesTime[0]);
+        const leakingTime = notesTime[0];
+        notesTime = notesTime.map((v) => v - leakingTime + preSongTime);
         ball.resetPos();
-        camera.resetPos();
-        const platforms = createPlatforms(notesTime, gravity, ball);
+        camera.x = ball.x;
+        camera.y = ball.y;
+        const platforms = createPlatforms(notesTime, preSongTime, gravity, ball);
         console.log("Notes Time : ", notesTime);
         console.log("Skip time :", skipTime);
         playing = false;
         setTimeout(() => {
             playing = true;
             firstFrame = true;
-            playMp3File(mp3, skipTime);
+            stopAudio();
+            setTimeout(() => {
+                playMp3File(mp3, skipTime);
+            }, preSongTime * 1000);
             setTimeout(() => {
                 requestAnimationFrame((currentTime) => loop(ball, particles, platforms, camera, notesTime, 0, currentTime));
-            }, song.delay ?? 0);
+            }, song.delay ?? 150);
         }, 200);
     });
 }

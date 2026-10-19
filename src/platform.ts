@@ -14,7 +14,7 @@ export class Platform extends entity{
 }
 
 /** Makes an estimation of ball trajectory to predict platforms pos */
-export function createPlatforms(notesTime : number[], gravity : number, ball : Ball) : Platform[]{
+export function createPlatforms(notesTime : number[], preSongTime : number, gravity : number, ball : Ball) : Platform[]{
     const res : Platform[] = [];
 
     const width = 32;
@@ -22,8 +22,9 @@ export function createPlatforms(notesTime : number[], gravity : number, ball : B
 
     let x = ball.x;
     let y = ball.y;
-    let lastTime = notesTime[0]
-    let velY = ball.velY
+    let lastTime = notesTime[0] - preSongTime;
+    let velY = ball.bounceVelY;
+
     for(let time of notesTime){
         const elapsed = time - lastTime
         lastTime = time;

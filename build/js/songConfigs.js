@@ -47,5 +47,10 @@ export const songConfigs = [
         name: "Dry hands",
         file: "dry-hands",
         startTime: 0
-    }
+    },
+    {
+        name: "Gravity Falls",
+        file: "gravity-falls",
+        tracks: [6, 3]
+    },
 ];

@@ -41,24 +41,27 @@ export async function detectMidiNotes(
 }
 
 let audioElement: HTMLAudioElement | null = null;
-
+export function stopAudio(){
+    audioElement?.pause();
+    audioElement = null;
+}
 export function playMp3File(file: Blob, skipTime : number) {
-  
+
     if (audioElement) {
-      audioElement.pause();
-      audioElement.currentTime = 0;
-      audioElement = null;
+        audioElement.pause();
+        audioElement.currentTime = 0;
+        audioElement = null;
     }
 
     const audioUrl = URL.createObjectURL(file);
 
     audioElement = new Audio(audioUrl);
     if (skipTime > 0) {
-      audioElement.currentTime = skipTime;
+        audioElement.currentTime = skipTime;
     }
     audioElement.onended = () => {
-      URL.revokeObjectURL(audioUrl);
-      audioElement = null;
+        URL.revokeObjectURL(audioUrl);
+        audioElement = null;
     };
 
     audioElement.play()

@@ -26,6 +26,10 @@ export async function detectMidiNotes(arrayBuffer, trackIndexes, minNoteTimeMs) 
     return uniqueOnsets;
 }
 let audioElement = null;
+export function stopAudio() {
+    audioElement?.pause();
+    audioElement = null;
+}
 export function playMp3File(file, skipTime) {
     if (audioElement) {
         audioElement.pause();
