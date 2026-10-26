@@ -1,5 +1,5 @@
 import { entity } from "./entity.js";
-import { hexToHsl, randomWithOpposite } from "./utils.js";
+import { randomWithOpposite } from "./utils.js";
 export class Particle extends entity {
     x;
     y;
@@ -17,8 +17,8 @@ export class Particle extends entity {
     luminosity;
     gravity;
     lifeProportion;
-    constructor(x, y, angle, color, angleDiff, speed, speedDiff, gravity) {
-        super(x, y, 1, 1, color);
+    constructor(x, y, angle, hue, luminosity, angleDiff, speed, speedDiff, gravity) {
+        super(x, y, 1, 1, "#fff");
         this.x = x;
         this.y = y;
         this.speed = speed + randomWithOpposite(speedDiff * speed);
@@ -35,10 +35,9 @@ export class Particle extends entity {
         this.radius = this.startRadius;
         const hueDiff = 10;
         const luminosityDiff = 10;
-        const hsl = hexToHsl(color);
-        this.hue = randomWithOpposite(hueDiff) + hsl[0];
-        this.saturation = hsl[1];
-        this.luminosity = randomWithOpposite(luminosityDiff) + hsl[2];
+        this.hue = randomWithOpposite(hueDiff) + hue;
+        this.saturation = 100;
+        this.luminosity = randomWithOpposite(luminosityDiff) + luminosity;
         const gravityDiff = 0.5;
         this.gravity = gravity + randomWithOpposite(gravityDiff * gravity);
         this.lifeProportion = 1;
@@ -54,7 +53,7 @@ export class Particle extends entity {
         this.radius = this.lifeProportion * this.startRadius;
     }
 }
-export function spawnParticlePatch(particles, x, y, angle, num, color, angleDiff, speed, speedDiff, gravity) {
+export function spawnParticlePatch(particles, x, y, angle, num, commonHue, commonLuminosity, angleDiff, speed, speedDiff, gravity) {
     // Spawns num particles in a new patch of particles list
     var patchIndex = null;
     for (let i = 0; i < particles.length; i++) {
@@ -72,7 +71,7 @@ export function spawnParticlePatch(particles, x, y, angle, num, color, angleDiff
     }
     let particleMaxLife = 0;
     for (let i = 0; i < num; i++) {
-        const p = new Particle(x, y, angle, color, angleDiff, speed, speedDiff, gravity);
+        const p = new Particle(x, y, angle, commonHue, commonLuminosity, angleDiff, speed, speedDiff, gravity);
         particles[patchIndex].push(p);
         particleMaxLife = p.baseStartLife + p.lifeDiff;
     }
@@ -94,11 +93,11 @@ export function updateParticles(particles, dt) {
         }
     }
 }
-export function handleCollision(particles, x, y, vx, vy, color, gravity) {
+export function handleCollision(particles, x, y, vx, vy, commonHue, commonLuminosity, gravity) {
     const num = 10;
     const angleDiff = Math.PI / 2;
     const speed = 100;
     const speedDiff = 0.2;
     const angle = Math.atan2(vy, vx);
-    spawnParticlePatch(particles, x, y, angle, num, color, angleDiff, speed, speedDiff, gravity * 0.5);
+    spawnParticlePatch(particles, x, y, angle, num, commonHue, commonLuminosity, angleDiff, speed, speedDiff, gravity * 0.5);
 }

@@ -6,6 +6,11 @@ import { createPlatforms, Platform } from "./platform.js";
 import { detectMidiNotes, playMp3File, stopAudio } from "./sound.helper.js"
 import { handleCollision, Particle, spawnParticlePatch, updateParticles } from "./particle.js";
 
+let commonHue = 0;
+const commonLuminosity = 65;
+const hueSpeed = 10;
+let commonColor = "#fff";
+let midCommonColor = "#555";
 
 const gravity = 750;
 let lastTime = 0;
@@ -15,8 +20,8 @@ let firstFrame = true;
 
 let playing = false;
 
-function loop(ball : Ball, particles : Particle[][], platforms : Platform[], camera : Camera, notesTime : number[], currentNote : number, time: number){
-
+function loop(ball : Ball, particles : Particle[][], platforms : Platform[], camera : Camera, notesTime : number[], currentNote : number,
+    canvas : HTMLCanvasElement, time: number){
     if(firstFrame){
         lastTime = time;
         beginTime = time;
@@ -39,17 +44,35 @@ function loop(ball : Ball, particles : Particle[][], platforms : Platform[], cam
     if(trueTime > currentNoteTime){
         const platform = platforms[currentNote]
         ball.bounce(platform.ballTargetY, platform.ballVelY, trueTime);
+        platform.passed = true;
+        updateCommonColors()
+        platform.color = commonColor;
+        ball.color = commonColor
+        platforms.forEach((p) => {
+            if(!p.passed){
+                p.color = midCommonColor;
+            }
+        })
+
         let collideY = ball.y - ball.sizeY;
         if(platform.reversedBounce){
             collideY = ball.y + ball.sizeY;
         }
-        handleCollision(particles, ball.x, collideY, ball.velX, ball.bounceVelY, "#00b3ff", gravity)
+        handleCollision(particles, ball.x, collideY, ball.velX, ball.bounceVelY, commonHue, commonLuminosity, gravity)
         currentNote++;
     }
+
+    commonHue += hueSpeed * dt;
+    
     
     if(playing){
-        requestAnimationFrame((currentTime) => loop(ball, particles, platforms, camera, notesTime, currentNote, currentTime));
+        requestAnimationFrame((currentTime) => loop(ball, particles, platforms, camera, notesTime, currentNote, canvas, currentTime));
     }
+}
+
+export function updateCommonColors(){
+    commonColor = `hsl(${commonHue}, 100%, ${commonLuminosity}%)`;    
+    midCommonColor = `hsl(${commonHue}, 100%, 15%)`;
 }
 
 function main(){
@@ -59,11 +82,12 @@ function main(){
     if(!ctx){
         return;
     }
+
+    updateCommonColors();
     
-    const ball = new Ball(200, 0, 0.9, 10, "#00ffcc");
+    const ball = new Ball(200, 0, 0.9, 10, commonColor);
     const particles : Particle[][] = [];
     const camera = new Camera(0, 0, 1, canvas, ctx, 5);
-
 
     const songSelector = document.getElementById('songSelector') as HTMLInputElement;
     const defaultOption = document.createElement("option");
@@ -101,7 +125,7 @@ function main(){
         camera.x = ball.x;
         camera.y = ball.y;
 
-        const platforms : Platform[] = createPlatforms(notesTime, preSongTime, gravity, ball);
+        const platforms : Platform[] = createPlatforms(notesTime, preSongTime, gravity, ball, midCommonColor);
 
         console.log("Notes Time : ", notesTime);
         console.log("Skip time :", skipTime);
@@ -114,7 +138,7 @@ function main(){
                 playMp3File(mp3, skipTime);
             }, preSongTime * 1000)
             setTimeout(() => {
-                requestAnimationFrame((currentTime) => loop(ball, particles, platforms, camera, notesTime, 0, currentTime));
+                requestAnimationFrame((currentTime) => loop(ball, particles, platforms, camera, notesTime, 0, canvas, currentTime));
             }, song.delay ?? 150);
         }, 200);
 

@@ -5,16 +5,18 @@ export class Platform extends entity{
     ballTargetY : number;
     ballVelY : number;
     reversedBounce : boolean;
+    passed : boolean;
     constructor(x : number, y : number, ballTargetY : number, width : number, height : number, color: string, reversedBounce : boolean, ballVelY : number){
         super(x, y, width, height, color);
         this.ballTargetY = ballTargetY;
         this.reversedBounce = reversedBounce
         this.ballVelY = ballVelY
+        this.passed = false;
     }
 }
 
 /** Makes an estimation of ball trajectory to predict platforms pos */
-export function createPlatforms(notesTime : number[], preSongTime : number, gravity : number, ball : Ball) : Platform[]{
+export function createPlatforms(notesTime : number[], preSongTime : number, gravity : number, ball : Ball, color : string) : Platform[]{
     const res : Platform[] = [];
 
     const width = 32;
@@ -38,7 +40,7 @@ export function createPlatforms(notesTime : number[], preSongTime : number, grav
 
         const bounceBackward = velYAtImpact > 0
         
-        res.push(new Platform(x - width / 2, y + (bounceBackward ? height + ball.sizeY : - ball.sizeX), y, width, height, "#ffffff", bounceBackward, velY));
+        res.push(new Platform(x - width / 2, y + (bounceBackward ? height + ball.sizeY : - ball.sizeX), y, width, height, color, bounceBackward, velY));
     }
     return res;
 }

@@ -21,7 +21,7 @@ export const songConfigs : songConfig[] = [
     {
         name: "Merry Go Round of Life",
         file : "merry",
-        startTime: 50,
+        startTime: 0,
     },
     {
         name: "Sweden",

@@ -21,10 +21,10 @@ export class Particle extends entity{
     gravity: number;
     lifeProportion : number
 
-    constructor(x: number, y: number, angle: number, color: string, angleDiff: number, 
+    constructor(x: number, y: number, angle: number, hue: number, luminosity : number, angleDiff: number, 
     speed: number, speedDiff: number, gravity : number) {
         
-        super(x, y, 1, 1, color)
+        super(x, y, 1, 1, "#fff")
         this.x = x;
         this.y = y;
 
@@ -48,10 +48,9 @@ export class Particle extends entity{
         const hueDiff = 10;
         const luminosityDiff = 10;
 
-        const hsl = hexToHsl(color);
-        this.hue = randomWithOpposite(hueDiff) + hsl[0];
-        this.saturation = hsl[1];
-        this.luminosity = randomWithOpposite(luminosityDiff) + hsl[2];
+        this.hue = randomWithOpposite(hueDiff) + hue;
+        this.saturation = 100;
+        this.luminosity = randomWithOpposite(luminosityDiff) + luminosity;
 
         const gravityDiff = 0.5
         this.gravity = gravity + randomWithOpposite(gravityDiff * gravity);
@@ -73,8 +72,8 @@ export class Particle extends entity{
     }
 }
 
-export function spawnParticlePatch( particles: (Particle[] | null)[], x: number, y: number, angle: number, num: number, color: string,
-    angleDiff: number, speed: number, speedDiff: number, gravity: number): void {
+export function spawnParticlePatch( particles: (Particle[] | null)[], x: number, y: number, angle: number, num: number, commonHue : number,
+commonLuminosity : number, angleDiff: number, speed: number, speedDiff: number, gravity: number): void {
     // Spawns num particles in a new patch of particles list
     var patchIndex: number | null = null;
     for (let i = 0; i < particles.length; i++) {
@@ -93,7 +92,7 @@ export function spawnParticlePatch( particles: (Particle[] | null)[], x: number,
 
     let particleMaxLife = 0;
     for (let i = 0; i < num; i++) {
-        const p = new Particle(x, y, angle, color, angleDiff, speed, speedDiff, gravity);
+        const p = new Particle(x, y, angle, commonHue, commonLuminosity, angleDiff, speed, speedDiff, gravity);
         (particles[patchIndex] as Particle[]).push(p);
         particleMaxLife = p.baseStartLife + p.lifeDiff;
     }
@@ -118,15 +117,8 @@ export function updateParticles(particles: Particle[][], dt: number): void {
     }
 }
 
-export function handleCollision(
-    particles: (Particle[] | null)[],
-    x: number,
-    y: number,
-    vx : number,
-    vy : number,
-    color :string,
-    gravity : number
-): void {
+export function handleCollision(particles: (Particle[] | null)[], x: number, y: number, vx : number,
+vy : number, commonHue : number, commonLuminosity : number, gravity : number): void {
     const num = 10;
     const angleDiff = Math.PI / 2;
     const speed = 100;
@@ -134,5 +126,5 @@ export function handleCollision(
 
     const angle = Math.atan2(vy, vx);
 
-    spawnParticlePatch(particles, x, y, angle, num, color, angleDiff, speed, speedDiff, gravity * 0.5);
+    spawnParticlePatch(particles, x, y, angle, num, commonHue, commonLuminosity, angleDiff, speed, speedDiff, gravity * 0.5);
 }

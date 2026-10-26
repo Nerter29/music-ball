@@ -1,4 +1,6 @@
 import { entity } from "./entity.js";
+import { Platform } from "./platform.js";
+import { randomInRange } from "./utils.js";
 
 export default class Ball extends entity{
     velX: number;
