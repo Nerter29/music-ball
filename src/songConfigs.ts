@@ -61,5 +61,15 @@ export const songConfigs : songConfig[] = [
         file : "gravity-falls",
         tracks: [6, 3]
     },
+    {
+        name: "Another Love",
+        file : "another-love",
+        tracks: [0]
+    },
+    {
+        name: "Taswell",
+        file : "taswell",
+        tracks: [3]
+    },
 
 ]

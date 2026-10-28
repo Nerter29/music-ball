@@ -36,3 +36,6 @@ export function randomInRange(min, max) {
 export function randomWithOpposite(n) {
     return randomInRange(-n, n);
 }
+export function getColorFromHSL(h, s, l) {
+    return `hsl(${h}, ${s}%, ${l}%)`;
+}
