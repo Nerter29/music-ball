@@ -73,7 +73,7 @@ function main(){
 
     const mainColor = getColorFromHSL(0, 100, commonLuminosity);
     
-    const ball = new Ball(200, 0, 0.9, 8, mainColor, 5, 0.3);
+    const ball = new Ball(200, 0, 0.9, 8, mainColor, 8, 0.3);
     const particles : Particle[][] = [];
     const camera = new Camera(0, 0, 1, canvas, ctx, 5);
 
@@ -93,8 +93,8 @@ function main(){
         const option = (e.target as HTMLOptionElement)
         const song = songConfigs[parseInt(option.value)];
 
-        const midi = await (await fetch(`../midis/${song.file}.mid`)).arrayBuffer();
-        const mp3 = await (await fetch(`../audio/${song.file}.mp3`)).blob();
+        const midi = await (await fetch(`midis/${song.file}.mid`)).arrayBuffer();
+        const mp3 = await (await fetch(`audio/${song.file}.mp3`)).blob();
         if (!midi) return;
 
         let notesTime = await detectMidiNotes(midi, song.tracks, 50);
