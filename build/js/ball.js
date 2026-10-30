@@ -10,7 +10,10 @@ export default class Ball extends entity {
     startX = 0;
     startY = 0;
     lastBounceTime = 0;
-    constructor(velX, velY, bounceRatio, radius, color) {
+    trailCoordList = [];
+    trailLength;
+    trailStartLuminosity;
+    constructor(velX, velY, bounceRatio, radius, color, trailLength, trailStartLuminosity) {
         super(0, 0, radius, radius, color);
         this.baseVelX = velX;
         this.baseVelY = velY;
@@ -19,6 +22,8 @@ export default class Ball extends entity {
         this.velX = velX;
         this.bounceVelY = velY;
         this.bounceRatio = bounceRatio;
+        this.trailLength = trailLength;
+        this.trailStartLuminosity = trailStartLuminosity;
     }
     resetPos() {
         this.x = this.baseX;
@@ -31,6 +36,10 @@ export default class Ball extends entity {
     }
     /** Analytic move */
     move(time, gravity) {
+        this.trailCoordList.push({ x: this.x, y: this.y });
+        if (this.trailCoordList.length > this.trailLength) {
+            this.trailCoordList.shift();
+        }
         const t = time - this.lastBounceTime;
         this.x = this.startX + this.velX * t;
         this.y = this.startY + (this.bounceVelY * t) - (0.5 * gravity * t * t);

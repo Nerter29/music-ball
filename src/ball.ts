@@ -2,6 +2,11 @@ import { entity } from "./entity.js";
 import { Platform } from "./platform.js";
 import { randomInRange } from "./utils.js";
 
+export type Coo = {
+    x: number,
+    y : number
+};
+
 export default class Ball extends entity{
     velX: number;
     bounceVelY: number;
@@ -14,8 +19,12 @@ export default class Ball extends entity{
     startX: number = 0;
     startY: number = 0;
     lastBounceTime: number = 0;
+    trailCoordList : Coo[] = [];
+    trailLength: number;
+    trailStartLuminosity : number;
 
-    constructor(velX : number, velY : number, bounceRatio: number, radius : number, color: string){
+    constructor(velX : number, velY : number, bounceRatio: number, radius : number, color: string, trailLength : number,
+    trailStartLuminosity : number){
         super(0, 0, radius, radius, color);
         this.baseVelX = velX;
         this.baseVelY = velY;
@@ -24,6 +33,9 @@ export default class Ball extends entity{
         this.velX = velX;
         this.bounceVelY = velY;
         this.bounceRatio = bounceRatio
+
+        this.trailLength = trailLength;
+        this.trailStartLuminosity = trailStartLuminosity;
     }
 
     resetPos(){
@@ -38,6 +50,12 @@ export default class Ball extends entity{
 
     /** Analytic move */
     move(time: number, gravity: number) {
+        
+        this.trailCoordList.push({x : this.x, y: this.y});
+        if(this.trailCoordList.length > this.trailLength){
+            this.trailCoordList.shift();
+        }
+
         const t = time - this.lastBounceTime;
 
         this.x = this.startX + this.velX * t;

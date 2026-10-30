@@ -10,7 +10,7 @@ export const songConfigs : songConfig[] = [
     {
         name: "Dreiton",
         file: "dreiton",
-        startTime: 150,
+        startTime: 148.3,
         tracks: [0, 6]
     },
     {

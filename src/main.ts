@@ -73,7 +73,7 @@ function main(){
 
     const mainColor = getColorFromHSL(0, 100, commonLuminosity);
     
-    const ball = new Ball(200, 0, 0.9, 8, mainColor);
+    const ball = new Ball(200, 0, 0.9, 8, mainColor, 5, 0.3);
     const particles : Particle[][] = [];
     const camera = new Camera(0, 0, 1, canvas, ctx, 5);
 

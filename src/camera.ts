@@ -60,15 +60,26 @@ export class Camera{
         this.y += (targetCenterY - this.y) * this.cameraSpeed * dt;
         entities.forEach(e => {
             if(!e){return;}
-            const x = e.x - this.x + this.screenWidth / 2;
-            const y = - (e.y - this.y) + this.screenHeight / 2;
+            const {x, y} = getScreenCoordinates(e.x, e.y, this.x, this.y, this.screenWidth, this.screenHeight);
             if(x >= 0 - e.sizeX && x <= this.screenWidth && y >= 0 - e.sizeY && y <= this.screenHeight){
-                if(e instanceof  Ball){
+                if(e instanceof Ball){
                     this.canvaCtx.beginPath();
                     this.canvaCtx.arc(x, y, e.sizeX, 0, 2* Math.PI, false)
                     this.canvaCtx.lineWidth = 2;
                     this.canvaCtx.strokeStyle = e.color;
                     this.canvaCtx.stroke()
+
+                    const trailSize = e.trailCoordList.length;
+                    e.trailCoordList.forEach((trailCoord, i) => {
+                        const {x: trailX, y: trailY} = getScreenCoordinates(trailCoord.x, trailCoord.y, this.x, this.y, this.screenWidth, this.screenHeight);
+                        this.canvaCtx.globalAlpha = e.trailStartLuminosity * (i / trailSize);
+                        this.canvaCtx.beginPath();
+                        this.canvaCtx.arc(trailX, trailY, e.sizeX, 0, 2* Math.PI, false)
+                        this.canvaCtx.lineWidth = 2;
+                        this.canvaCtx.strokeStyle = e.color;
+                        this.canvaCtx.stroke()
+                    });
+                    this.canvaCtx.globalAlpha = 1;
                 }
                 else if(e instanceof Platform){
                     this.canvaCtx.beginPath();
@@ -87,4 +98,13 @@ export class Camera{
             }
         });
     }
+}
+
+
+function getScreenCoordinates(objectX : number, objectY : number, cameraX : number, cameraY : number,
+    screenWidth : number, screenHeight : number) {
+    return {
+        x: objectX - cameraX + screenWidth / 2,
+        y: -(objectY - cameraY) + screenHeight / 2
+    };
 }
