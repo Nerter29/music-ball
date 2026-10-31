@@ -6,6 +6,7 @@ import { createPlatforms, Platform } from "./platform.js";
 import { detectMidiNotes, playMp3File, stopAudio } from "./sound.helper.js"
 import { handleCollision, Particle, updateParticles } from "./particle.js";
 import { getColorFromHSL } from "./utils.js";
+import { hideSpinner, showSpinner } from "./simulation.js";
 
 const commonLuminosity = 65;
 const hueSpeed = 10;
@@ -78,9 +79,6 @@ function main(){
     const camera = new Camera(0, 0, 1, canvas, ctx, 5);
 
     const songSelector = document.getElementById('songSelector') as HTMLInputElement;
-    const defaultOption = document.createElement("option");
-    defaultOption.textContent = "Select a song";
-    songSelector.appendChild(defaultOption);
 
     songConfigs.forEach((song, i) =>{
         const optionElt = document.createElement("option")
@@ -92,10 +90,11 @@ function main(){
     songSelector.addEventListener('change', async (e) => {
         const option = (e.target as HTMLOptionElement)
         const song = songConfigs[parseInt(option.value)];
-
+        showSpinner()
         const midi = await (await fetch(`midis/${song.file}.mid`)).arrayBuffer();
         const mp3 = await (await fetch(`audio/${song.file}.mp3`)).blob();
         if (!midi) return;
+        hideSpinner();
 
         let notesTime = await detectMidiNotes(midi, song.tracks, 50);
         if(notesTime.length <= 0){
@@ -128,7 +127,7 @@ function main(){
             }, preSongTime * 1000)
             setTimeout(() => {
                 requestAnimationFrame((currentTime) => loop(ball, particles, platforms, camera, notesTime, 0, canvas, currentTime));
-            }, song.delay ?? 150);
+            }, song.delay ?? 0);
         }, 200);
 
     });

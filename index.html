@@ -14,7 +14,12 @@
     <body>
         <header><div id="banner-container"></div></header>
         <div class="page">
-          <select id="songSelector"></select>
+          <div class="topBloc">
+            <select id="songSelector" autocomplete="off">
+              <option value="" disabled selected hidden>Select a song</option>
+            </select>
+            <div id="spinner" class="spinner" style="display: none;"></div>
+          </div>
           <canvas id="mainCanvas"></canvas>
         </div>
 
