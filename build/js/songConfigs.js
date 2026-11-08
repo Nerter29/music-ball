@@ -28,9 +28,9 @@ export const songConfigs = [
     },
     {
         name: "Aria Math",
-        file: "aria-math",
-        startTime: 50,
-        tracks: [13, 14]
+        file: "aria-math-2",
+        startTime: 0,
+        tracks: [8, 13, 14, 16]
     },
     {
         name: "Nocturne",
