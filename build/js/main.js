@@ -100,7 +100,7 @@ function main() {
             }, preSongTime * 1000);
             setTimeout(() => {
                 requestAnimationFrame((currentTime) => loop(ball, particles, platforms, camera, notesTime, 0, canvas, currentTime));
-            }, song.delay ?? 100);
+            }, song.delay ?? 0);
         }, 200);
     });
 }
