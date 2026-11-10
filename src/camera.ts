@@ -28,7 +28,7 @@ export class Camera{
         let windowHeight = window.innerHeight;
 
         this.screenWidth = windowWidth - 100
-        this.screenHeight = windowHeight - 100
+        this.screenHeight = windowHeight - 200
 
         this.canvas.width = this.screenWidth;
         this.canvas.height = this.screenHeight;
@@ -46,7 +46,7 @@ export class Camera{
         let windowHeight = window.innerHeight;
 
         this.screenWidth = windowWidth - 100
-        this.screenHeight = windowHeight - 100
+        this.screenHeight = windowHeight - 200
 
         this.canvas.width = this.screenWidth;
         this.canvas.height = this.screenHeight;
@@ -58,10 +58,14 @@ export class Camera{
     draw(entities : entity[], targetCenterX : number, targetCenterY : number, dt : number): void{
         this.x += (targetCenterX - this.x) * this.cameraSpeed * dt;
         this.y += (targetCenterY - this.y) * this.cameraSpeed * dt;
+        const zoom = 1;//1.3;
+        const sWidth = this.screenWidth / zoom
+        const sHeight = this.screenHeight / zoom
+        this.canvaCtx.scale(zoom, zoom);
         entities.forEach(e => {
             if(!e){return;}
-            const {x, y} = getScreenCoordinates(e.x, e.y, this.x, this.y, this.screenWidth, this.screenHeight);
-            if(x >= 0 - e.sizeX && x <= this.screenWidth && y >= 0 - e.sizeY && y <= this.screenHeight){
+            const {x, y} = getScreenCoordinates(e.x, e.y, this.x, this.y, sWidth, sHeight);
+            if(x >= 0 - e.sizeX && x <= sWidth && y >= 0 - e.sizeY && y <= sHeight){
                 if(e instanceof Ball){
                     this.canvaCtx.beginPath();
                     this.canvaCtx.arc(x, y, e.sizeX, 0, 2* Math.PI, false)
@@ -71,7 +75,7 @@ export class Camera{
 
                     const trailSize = e.trailCoordList.length;
                     e.trailCoordList.forEach((trailCoord, i) => {
-                        const {x: trailX, y: trailY} = getScreenCoordinates(trailCoord.x, trailCoord.y, this.x, this.y, this.screenWidth, this.screenHeight);
+                        const {x: trailX, y: trailY} = getScreenCoordinates(trailCoord.x, trailCoord.y, this.x, this.y, sWidth, sHeight);
                         this.canvaCtx.globalAlpha = e.trailStartLuminosity * (i / trailSize);
                         this.canvaCtx.beginPath();
                         this.canvaCtx.arc(trailX, trailY, e.sizeX, 0, 2* Math.PI, false)

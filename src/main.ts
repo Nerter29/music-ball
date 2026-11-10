@@ -72,6 +72,7 @@ function main(){
         return;
     }
 
+
     const mainColor = getColorFromHSL(0, 100, commonLuminosity);
     
     const ball = new Ball(200, 0, 0.9, 8, mainColor, 8, 0.3);
