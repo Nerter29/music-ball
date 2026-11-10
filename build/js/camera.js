@@ -44,7 +44,7 @@ export class Camera {
     draw(entities, targetCenterX, targetCenterY, dt) {
         this.x += (targetCenterX - this.x) * this.cameraSpeed * dt;
         this.y += (targetCenterY - this.y) * this.cameraSpeed * dt;
-        const zoom = 1.3;
+        const zoom = 1; //1.3;
         const sWidth = this.screenWidth / zoom;
         const sHeight = this.screenHeight / zoom;
         this.canvaCtx.scale(zoom, zoom);
