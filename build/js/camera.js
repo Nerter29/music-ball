@@ -53,7 +53,7 @@ export class Camera {
                 return;
             }
             const { x, y } = getScreenCoordinates(e.x, e.y, this.x, this.y, sWidth, sHeight);
-            if (x >= 0 - e.sizeX && x <= sWidth && y >= 0 - e.sizeY && y <= sHeight) {
+            if ((x >= 0 - e.sizeX && x <= sWidth && y >= 0 - e.sizeY && y <= sHeight) || e instanceof Ball) {
                 if (e instanceof Ball) {
                     this.canvaCtx.beginPath();
                     this.canvaCtx.arc(x, y, e.sizeX, 0, 2 * Math.PI, false);

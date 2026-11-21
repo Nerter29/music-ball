@@ -67,9 +67,20 @@ export const songConfigs : songConfig[] = [
         tracks: [0]
     },
     {
-        name: "Taswell",
-        file : "taswell",
-        tracks: [3]
+        name: "7 weeks and 3 days",
+        file : "7weeks",
+        tracks: [0, 3]
     },
+
+    {
+        name: "Amour Plastique",
+        file: "amour-plastique",
+        tracks: [0]
+    },
+    {
+        name: "I Follow Rivers",
+        file: "i-follow-rivers",
+        tracks: [1, 3]
+    }
 
 ]
