@@ -106,7 +106,7 @@ function main(){
         let skipTime = notesTime[0] + (song.startTime ?? 0);
         notesTime = notesTime.map((v) => {return v - skipTime}).filter((v) => {return v >= 0});
         skipTime += notesTime[0];
-        const leakingTime =  notesTime[0]
+        const leakingTime = notesTime[0]
         notesTime = notesTime.map((v) => v - leakingTime + preSongTime);
         
         ball.resetPos();
@@ -123,9 +123,7 @@ function main(){
             playing = true;
             firstFrame = true;
             stopAudio();
-            setTimeout(() => {
-                playMp3File(mp3, skipTime);
-            }, preSongTime * 1000)
+            playMp3File(mp3, skipTime, preSongTime * 1000 - 200);
             setTimeout(() => {
                 requestAnimationFrame((currentTime) => loop(ball, particles, platforms, camera, notesTime, 0, canvas, currentTime));
             }, song.delay ?? 0);

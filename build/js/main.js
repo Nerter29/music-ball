@@ -95,9 +95,7 @@ function main() {
             playing = true;
             firstFrame = true;
             stopAudio();
-            setTimeout(() => {
-                playMp3File(mp3, skipTime);
-            }, preSongTime * 1000);
+            playMp3File(mp3, skipTime, preSongTime * 1000 - 200);
             setTimeout(() => {
                 requestAnimationFrame((currentTime) => loop(ball, particles, platforms, camera, notesTime, 0, canvas, currentTime));
             }, song.delay ?? 0);

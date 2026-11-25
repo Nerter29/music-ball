@@ -45,7 +45,7 @@ export function stopAudio(){
     audioElement?.pause();
     audioElement = null;
 }
-export function playMp3File(file: Blob, skipTime : number) {
+export function playMp3File(file: Blob, skipTime : number, timeoutMs : number = 0) {
 
     if (audioElement) {
         audioElement.pause();
@@ -63,7 +63,8 @@ export function playMp3File(file: Blob, skipTime : number) {
         URL.revokeObjectURL(audioUrl);
         audioElement = null;
     };
-
-    audioElement.play()
+    setTimeout(() => {
+        audioElement?.play();
+    }, timeoutMs);
 
 }
